@@ -11,14 +11,6 @@ const getAllArticles = (req, res) => {
     console.log("RESULT: ", result);
     res.json(result);
   });
-  // articlesModel
-  // 	.find({})
-  // 	.then((result) => {
-  // 		res.status(200).json(result);
-  // 	})
-  // 	.catch((err) => {
-  // 		res.send(err);
-  // 	});
 };
 
 const getArticlesByAuthor = (req, res) => {
@@ -26,14 +18,16 @@ const getArticlesByAuthor = (req, res) => {
 
   if (!author) return res.status(404).json("not found");
 
-  articlesModel
-    .find({ author })
-    .then((result) => {
-      res.status(200).json(result);
-    })
-    .catch((err) => {
+  const query = `SELECT * FROM articles WHERE  author_id=?;`;
+  const data = [author];
+  db.query(query, data, (err, result) => {
+    if (err) {
       res.send(err);
-    });
+      return;
+    }
+    console.log("RESULT: ", result);
+    res.json(result);
+  });
 };
 
 const getAnArticleById = (req, res) => {
@@ -54,10 +48,10 @@ const getAnArticleById = (req, res) => {
 };
 
 const createNewArticle = (req, res) => {
-  const { title, description, author_id  } = req.body;
+  const { title, description, author_id } = req.body;
 
   const query = `INSERT INTO articles ( title, description, author_id ) VALUES (?, ?, ?)`;
-  const data = [title, description, author_id ];
+  const data = [title, description, author_id];
   let id;
   db.query(query, data, (err, result) => {
     if (err) throw err;
@@ -69,7 +63,6 @@ const createNewArticle = (req, res) => {
       res.status(201).json(result);
     });
   });
-
 };
 
 const updateAnArticleById = (req, res) => {
