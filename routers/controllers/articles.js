@@ -106,17 +106,15 @@ const deleteArticleById = (req, res) => {
 const deleteArticlesByAuthor = (req, res) => {
   const author = req.body.author;
 
-  articlesModel
-    .deleteMany({ author })
-    .then((result) => {
-      res.status(200).json({
-        success: true,
-        message: `Success Delete atricle with id => ${author}`,
-      });
-    })
-    .catch((err) => {
-      res.send(err);
-    });
+  const query = "UPDATE articles SET is_deleted = 1 WHERE id=?";
+  const data = [author];
+  db.query(query, data, (err, result) => {
+    if (err) {
+      console.log(err);
+      return res.send(err);
+    }
+    res.status(200).json("deleted successfully");
+  });
 };
 
 module.exports = {
