@@ -8,6 +8,6 @@ const authentication = require('./../middlewares/authentication');
 
 const commentsRouter = express.Router();
 
-commentsRouter.post('/articles/:id/comments', authentication, createNewComment);
+commentsRouter.post('/articles/:id/comments', createNewComment);
 
 module.exports = commentsRouter;

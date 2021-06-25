@@ -43,19 +43,6 @@ const data =[id]
     console.log("RESULT: ", result);
     res.json(result);
   });
-
-  // if (!_id) return res.status(404).json("not found");
-
-  // articlesModel
-  //   .findOne({ _id })
-  //   .populate("author", "firstName -_id")
-  //   .exec()
-  //   .then((result) => {
-  //     res.status(200).json(result);
-  //   })
-  //   .catch((err) => {
-  //     res.send(err);
-  //   });
 };
 
 const createNewArticle = (req, res) => {
