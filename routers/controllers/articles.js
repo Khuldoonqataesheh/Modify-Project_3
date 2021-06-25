@@ -31,20 +31,31 @@ const getArticlesByAuthor = (req, res) => {
 };
 
 const getAnArticleById = (req, res) => {
-  const _id = req.params.id;
-
-  if (!_id) return res.status(404).json("not found");
-
-  articlesModel
-    .findOne({ _id })
-    .populate("author", "firstName -_id")
-    .exec()
-    .then((result) => {
-      res.status(200).json(result);
-    })
-    .catch((err) => {
+  const id = req.params.id;
+  if (!id) return res.status(404).json("not found");
+  const query = `SELECT * FROM articles WHERE  is_deleted=0 AND id =? ;`;
+const data =[id]
+  db.query(query,data, (err, result) => {
+    if (err) {
       res.send(err);
-    });
+      return;
+    }
+    console.log("RESULT: ", result);
+    res.json(result);
+  });
+
+  // if (!_id) return res.status(404).json("not found");
+
+  // articlesModel
+  //   .findOne({ _id })
+  //   .populate("author", "firstName -_id")
+  //   .exec()
+  //   .then((result) => {
+  //     res.status(200).json(result);
+  //   })
+  //   .catch((err) => {
+  //     res.send(err);
+  //   });
 };
 
 const createNewArticle = (req, res) => {
