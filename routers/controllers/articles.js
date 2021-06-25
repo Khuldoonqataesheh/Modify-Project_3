@@ -67,15 +67,27 @@ const createNewArticle = (req, res) => {
 
 const updateAnArticleById = (req, res) => {
   const id = req.params.id;
-
-  articlesModel
-    .findByIdAndUpdate(id, req.body, { new: true })
-    .then((result) => {
-      res.status(200).json(result);
-    })
-    .catch((err) => {
+  const { title, description, author_id } = req.body;
+  const query = `UPDATE articles 
+  SET title = ?, description =  ? , author_id = ?  
+   WHERE id = ?`;
+  const arr = [title, description, author_id, id];
+  db.query(query, arr, (err, result) => {
+    if (err) {
       res.send(err);
+      return;
+    }
+
+    const query_2 = `SELECT * FROM articles WHERE id=?`;
+    const data = [id];
+    db.query(query_2, data, (err, response) => {
+      if (err) {
+        res.send(err);
+        return;
+      }
+      res.status(201).json(response);
     });
+  });
 };
 
 const deleteArticleById = (req, res) => {
